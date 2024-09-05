@@ -227,6 +227,7 @@ class MemoRAG:
         mem_model_name_or_path: str, 
         ret_model_name_or_path: str,
         gen_model_name_or_path: str=None,
+        customized_gen_model=None,
         ret_hit:int=3,
         retrieval_chunk_size:int=512,
         cache_dir:Optional[str]=None,
@@ -235,8 +236,13 @@ class MemoRAG:
         self.mem_model = Memory(
             mem_model_name_or_path, cache_dir=cache_dir, beacon_ratio=4)
 
-        self.gen_model = Model(
-            gen_model_name_or_path, cache_dir=cache_dir, access_token=access_token)      
+        if gen_model_name_or_path:
+            self.gen_model = Model(
+                gen_model_name_or_path, cache_dir=cache_dir, access_token=access_token)      
+        elif customized_gen_model:  # for API-based models
+            self.gen_model = customized_gen_model
+        else:
+            self.gen_model = None    
 
         self.retriever = DenseRetriever(
             ret_model_name_or_path, hits=ret_hit, cache_dir=cache_dir)
@@ -244,7 +250,7 @@ class MemoRAG:
         self.text_splitter = TextSplitter.from_tiktoken_model(
             "gpt-3.5-turbo", retrieval_chunk_size)
 
-    def memorize(self, context:str, save_dir:str=None, print_stats:bool=False):
+    def memorize(self, context: str, save_dir: str = None, print_stats: bool = False):
         self.mem_model.memorize(context)
         self.retrieval_corpus = self.text_splitter.chunks(context)
         self.retriever.add(self.retrieval_corpus)
@@ -257,44 +263,41 @@ class MemoRAG:
             with open(os.path.join(save_dir, "chunks.json"), "w") as f:
                 json.dump(self.retrieval_corpus, f, ensure_ascii=False, indent=2)
             if print_stats:
-                memory_path = os.path.join(save_dir, "memory.bin")
-                memory_size_gb = os.path.getsize(memory_path) / (1024 ** 3)
-                print(f"Memory file size: {memory_size_gb:.2f} GB")
+                self._print_stats(save_dir, context)
 
-                encoding = tiktoken.get_encoding("cl100k_base")
-                encoded_context = encoding.encode(context)
-                print(f"Encoded context length: {len(encoded_context)} tokens")
+    def _print_stats(self, save_dir: str, context: str=None):
+        memory_path = os.path.join(save_dir, "memory.bin")
+        memory_size_gb = os.path.getsize(memory_path) / (1024 ** 3)
+        print(f"Memory file size: {memory_size_gb:.2f} GB")
 
-                # Print the length of the split retrieval corpus
-                print(f"Number of chunks in retrieval corpus: {len(self.retrieval_corpus)}")
+        encoding = tiktoken.get_encoding("cl100k_base")
+        if context:
+            encoded_context = encoding.encode(context)
+            print(f"Encoded context length: {len(encoded_context)} tokens")
+        print(f"Number of chunks in retrieval corpus: {len(self.retrieval_corpus)}")
 
-    def load(self, save_dir:str, print_stats:bool=False):
+
+    def load(self, save_dir: str, print_stats: bool = False):
         self.mem_model.load(os.path.join(save_dir, "memory.bin"))
         _index = FaissIndex(self.retriever.device)
         _index.load(os.path.join(save_dir, "index.bin"))
         self.retriever._index = _index
         self.retrieval_corpus = json.load(open(os.path.join(save_dir, "chunks.json")))
         if print_stats:
-                memory_path = os.path.join(save_dir, "memory.bin")
-                memory_size_gb = os.path.getsize(memory_path) / (1024 ** 3)
-                print(f"Loaded Memory Cache: {memory_size_gb:.2f} GB")
-
-                encoding = tiktoken.get_encoding("cl100k_base")
-                encoded_context = encoding.encode(context)
-                print(f"Encoded context length: {len(encoded_context)} tokens")
-
-                # Print the length of the split retrieval corpus
-                print(f"Number of chunks in retrieval corpus: {len(self.retrieval_corpus)}")
+            self._print_stats(save_dir)
             
     def __call__(
         self, 
-        context:str, 
-        query:str=None, 
-        task_type:str="rag", 
-        prompt_template:str=None,
-        max_new_tokens:int=256,
-        reset_each_call:bool=False,
-        use_memory_answer:bool=False):
+        context: str, 
+        query: str = None, 
+        task_type: str = "rag", 
+        prompt_template: str = None,
+        max_new_tokens: int = 256,
+        reset_each_call: bool = False,
+        use_memory_answer: bool = False
+    ):
+        assert self.gen_model is not None
+        
         if reset_each_call:
             self.mem_model.reset()
             self.retriever.remove_all()
@@ -302,84 +305,62 @@ class MemoRAG:
         if not self.mem_model.memory:
             self.memorize(context)
 
-        potention_answer = None
-
         if task_type == 'qa':
-            return self.mem_model.answer(query)
-        
-        elif task_type == 'rag':
-            text_spans = self.mem_model.recall(query)
-            surrogate_queries = self.mem_model.rewrite(query)
-            retrieval_query = text_spans.split("\n") + surrogate_queries.split("\n")
-            retrieval_query = [query for query in retrieval_query if len(query.split()) > 3]
-            if use_memory_answer:
-                potention_answer = self.mem_model.answer(query)
-                retrieval_query.append(potention_answer)
-
-            retrieval_query.append(query)
-                    
+            return self._handle_qa(query)
+        elif task_type == 'memorag':
+            return self._handle_rag(query, prompt_template, max_new_tokens, use_memory_answer)
         elif task_type == 'summarize':
-            key_points = self.mem_model.summarize()
-            retrieval_query = key_points.split("\n")
-            retrieval_query = [query for query in retrieval_query if len(query.split()) > 3]
-        
+            return self._handle_summarization(prompt_template, max_new_tokens)
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f"Task type '{task_type}' is not supported.")
 
-        topk_scores, topk_indices = self.retriever.search(
-            queries=retrieval_query)
-        topk_indices = list(chain(*[topk_index.tolist() for topk_index in topk_indices]))
-        topk_indices = list(set(topk_indices))
+    def _handle_qa(self, query: str):
+        return self.mem_model.answer(query)
 
-        topk_indices = sorted([x for x in topk_indices if x > -1])
-        retrieval_results = [self.retrieval_corpus[i].strip() for i in topk_indices]
-        if potention_answer:
+    def _handle_rag(self, query: str, prompt_template: str, max_new_tokens: int, use_memory_answer: bool):
+        text_spans = self.mem_model.recall(query)
+        surrogate_queries = self.mem_model.rewrite(query)
+        retrieval_query, potential_answer = self._prepare_retrieval_query(query, text_spans, surrogate_queries, use_memory_answer)
+
+        retrieval_results = self._retrieve(retrieval_query)
+
+        if potential_answer:
             retrieval_results.append(f"The answer might be {potential_answer}.")
-            
+
+        knowledge = "\n\n".join(retrieval_results)
+        
+        return self._generate_response("qa_gen", query, knowledge, prompt_template, max_new_tokens)
+
+    def _handle_summarization(self, prompt_template: str, max_new_tokens: int):
+        key_points = self.mem_model.summarize()
+        retrieval_query = [query for query in key_points.split("\n") if len(query.split()) > 3]
+
+        retrieval_results = self._retrieve(retrieval_query)
         knowledge = "\n\n".join(retrieval_results)
 
-        if task_type in ["rag"]:
-            if prompt_template:
-                prompt = prompt_template.format(input=query, context=knowledge)
-            else:
-                prompt = prompts["qa_gen"].format(input=query, context=knowledge)
-            answer = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
-        elif task_type in ['summarize']:
-            if prompt_template:
-                prompt = prompt_template.format(context=knowledge)
-            else:
-                prompt = prompts["sum_gen"].format(context=knowledge)
-            answer = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
+        return self._generate_response("sum_gen", None, knowledge, prompt_template, max_new_tokens)
+
+    def _prepare_retrieval_query(self, query, text_spans, surrogate_queries, use_memory_answer):
+        retrieval_query = text_spans.split("\n") + surrogate_queries.split("\n")
+        retrieval_query = [q for q in retrieval_query if len(q.split()) > 3]
+        potential_answer = None
+        if use_memory_answer:
+            potential_answer = self.mem_model.answer(query)
+            retrieval_query.append(potential_answer)
+        retrieval_query.append(query)
+        return retrieval_query, potential_answer
+
+    def _retrieve(self, retrieval_query):
+        topk_scores, topk_indices = self.retriever.search(queries=retrieval_query)
+        topk_indices = list(chain(*[topk_index.tolist() for topk_index in topk_indices]))
+        topk_indices = sorted(set([x for x in topk_indices if x > -1]))
+        return [self.retrieval_corpus[i].strip() for i in topk_indices]
+
+    def _generate_response(self, task_key: str, query: str, knowledge: str, prompt_template: str, max_new_tokens: int):
+        if prompt_template:
+            prompt = prompt_template.format(input=query, context=knowledge) if query else prompt_template.format(context=knowledge)
         else:
-            raise NotImplementedError
+            prompt = prompts[task_key].format(input=query, context=knowledge) if query else prompts[task_key].format(context=knowledge)
 
-        return answer
+        return self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
 
-if __name__ == "__main__":
-
-
-    # model = Memory(
-    #     "/share/qhj/memorag-mistral-7b-inst", beacon_ratio=4
-    # )
-    pipe = MemoRAG(
-        "/share/qhj/rags/data/memory_model/qwen2-sft-0830-beacon/checkpoint-7683",
-        "BAAI/bge-m3",
-        "mistralai/Mistral-7B-Instruct-v0.2",
-        cache_dir="/share/shared_models/",
-        access_token="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"
-    )
-    query = "how many times does the chamber be opened in Harry Potter?"
-    # res = model.generate(query, batch_size=2)
-    # print(res)
-    test_txt = open("examples/harry_potter.txt").read()
-    # res = pipe(test_txt, query)
-    # print(res)
-    pipe.memorize(test_txt, "examples/qwen/", True)
-    pipe.load("examples/qwen/")
-    res = pipe(test_txt, query, "qa", max_new_tokens=256)
-    print(res)
-    res = pipe(test_txt, query, "rag", max_new_tokens=256)
-    print(res)
-    res = pipe(test_txt, query, "summarize", max_new_tokens=512)
-    print(res)
-    
