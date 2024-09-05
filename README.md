@@ -14,7 +14,8 @@
 <p>
 <a href="#sparkles-features">Features</a> |
 <a href="#rocket-quick-start">Quick-Start</a> |
-<a href="#memorag-demo"> MemoRAG Demo</a> |
+<a href="#notebook-usage">Usage</a> |
+<a href="#memorag-demo"> Demo</a> |
 <a href="#raised_hands-faqs"> FAQs</a>
 </p>
 
