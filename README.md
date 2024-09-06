@@ -25,8 +25,22 @@
 
 
 <p align="center">
-<img src="asset/case.jpg">
+<img src="asset/tech_case.jpg">
 </p>
+
+## MemoRAG Demo
+We will provide a toy demo to demonstrate MemoRAG, you can try with the following scripts:
+
+```python
+streamlit run demo/demo.py
+```
+Afterwards, you can view the demo as bellow:
+
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <img src="./asset/demo.gif" style="width: 100%;">
+  </div>
+</div>
 
 ## :sparkles: Features
 
@@ -624,19 +638,7 @@ We will update other evaluation scripts soon.
 We will upload all datasets used in MemoRAG to [this repo](https://huggingface.co/datasets/TommyChien/MemoRAG).
 
 
-## MemoRAG Demo
-We provide a toy demo to demonstrate MemoRAG, you can try with the following scripts:
 
-```python
-streamlit run demo/demo.py
-```
-Afterwards, you can view the demo as bellow:
-
-<div style="display: flex; justify-content: space-around;">
-  <div style="text-align: center;">
-    <img src="./asset/demo.gif" style="width: 100%;">
-  </div>
-</div>
 
 ## :raised_hands: FAQs
 
