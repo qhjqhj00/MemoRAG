@@ -93,6 +93,11 @@ cd MemoRAG
 pip install -e .
 ```
 
+**Install via pip**
+```
+pip install memorag
+```
+
 For **Quick Start**,
 We provide a notebook to illustrate all functions of MemoRAG [here](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/example.ipynb).
 
