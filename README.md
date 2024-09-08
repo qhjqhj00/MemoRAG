@@ -1,5 +1,5 @@
 
-# <div align="center">MemoRAG: Moving towards Next-Gen RAG On Top Of Memory-Inspired Retrieval<div>
+# <div align="center">MEMORAG: MOVING TOWARDS NEXT-GEN RAG VIA MEMORY-INSPIRED KNOWLEDGE DISCOVERY<div>
 
 <div align="center">
 <p><strong>Empowering RAG with a versatile model-driven data interface for all-purpose applications!</strong></p>
