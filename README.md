@@ -12,8 +12,8 @@
 <h4 align="center">
 
 <p>
-<a href="#sparkles-features">Features</a> |
 <a href="#rocket-quick-start">Quick-Start</a> |
+<a href="#rocket-quick-start">Colab</a> |
 <a href="#notebook-usage">Usage</a> |
 <a href="#memorag-demo"> Demo</a> |
 <a href="#dataset">Dataset</a> |
