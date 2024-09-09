@@ -59,12 +59,11 @@ Afterwards, you can view the demo as bellow:
 - [x] Support OpenAI models
 - [x] Support Azure models
 - [x] Add evaluation scripts on benchmarks
+- [x] Dataset Release
 - [ ] Technical Report Release
-- [ ] Dataset Release
 - [ ] Demo Codes Release
 - [ ] Training Codes for Memory model Release
 - [ ] Support Any Model as Memory model
-- [ ] Extract weight from Memory model as Generator
 
 ## :page_with_curl: Changelog
 [05/09/22] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
@@ -116,7 +115,7 @@ from memorag import MemoRAG
 pipe = MemoRAG(
     mem_model_name_or_path="TommyChien/memorag-mistral-7b-inst",
     ret_model_name_or_path="BAAI/bge-m3", 
-    gen_model_name_or_path="mistralai/Mistral-7B-Instruct-v0.2", 
+    gen_model_name_or_path="mistralai/Mistral-7B-Instruct-v0.2", # Optional: if not specify, use memery model as the generator
     cache_dir="path_to_model_cache",  # Optional: specify local model cache directory
     access_token="hugging_face_access_token",  # Optional: Hugging Face access token
     beacon_ratio=4
@@ -140,8 +139,6 @@ pipe.load("cache/harry_potter/", print_stats=True)
 ```
 
 Typically, loading cached weights is highly efficient. For example, encoding, chunking, and indexing a 200K-token context takes approximately 35 seconds using `TommyChien/memorag-qwen2-7b-inst` as the memory model, but only 1.5 seconds when loading from cached files.
-
-**TODO**: We can reuse some parameters from `TommyChien/memorag-qwen2-7b-inst` and `TommyChien/memorag-mistral-7b-inst` as the generator weights because these parameters are frozen during the memory model training. By doing so, MemoRAG can significantly reduce GPU memory usage.
 
 ### Summarization Task
 
