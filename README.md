@@ -56,8 +56,7 @@ Afterwards, you can view the demo as bellow:
 **MemoRAG**  is currently under active development, with resources and prototypes continuously being published at this repository.
 - [x] Initial Codes Release
 - [x] Memory Model Release
-- [x] Support OpenAI models
-- [x] Support Azure models
+- [x] Support OpenAI/Azure models
 - [x] Add evaluation scripts on benchmarks
 - [x] Dataset Release
 - [ ] Technical Report Release
@@ -66,6 +65,8 @@ Afterwards, you can view the demo as bellow:
 - [ ] Support Any Model as Memory model
 
 ## :page_with_curl: Changelog
+[09/09/22] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
+
 [05/09/22] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
 
 [03/09/22] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
@@ -73,7 +74,9 @@ Afterwards, you can view the demo as bellow:
 [01/09/22] The project launched! 
 
 ## :rocket: Quick Start
+:free: **You can directly try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.**
 
+In this notebook, we run the complete MemoRAG pipeline (Memory Model + Retriever + Generation Model) on a single T4 GPU with 15GiB of memory provided by Google Colab. Despite the limited resources, MemoRAG can process half of the content from [the example book](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/harry_potter.txt) (~68K tokens) and perform all of its functions.
 
 ### Installation
 
