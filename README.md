@@ -17,7 +17,7 @@
 <a href="#notebook-usage">Usage</a> |
 <a href="#memorag-demo"> Demo</a> |
 <a href="#raised_hands-faqs"> FAQs</a> |
-<a href="Dataset">Dataset</a>
+<a href="#dataset">Dataset</a>
 </p>
 
 ## Overview
