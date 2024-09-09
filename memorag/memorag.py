@@ -20,13 +20,17 @@ class Model:
         cache_dir: str="",
         access_token: str="",
         beacon_ratio: int=None,
-        load_in_4bit: bool=False
+        load_in_4bit: bool=False,
+        enable_flash_attn: bool=True
     ):  
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        if model_name_or_path.find("mistral") != -1:
-            attn_implementation = "sdpa"
+        if enable_flash_attn:
+            if model_name_or_path.find("mistral") != -1:
+                attn_implementation = "sdpa"
+            else:
+                attn_implementation = "flash_attention_2"
         else:
-            attn_implementation = "flash_attention_2"
+            attn_implementation = None
 
         model_kwargs = {
             "cache_dir": cache_dir,
@@ -235,14 +239,15 @@ class MemoRAG:
         cache_dir:Optional[str]=None,
         access_token:Optional[str]=None,
         beacon_ratio:int=4,
-        load_in_4bit:bool=False):
+        load_in_4bit:bool=False,
+        enable_flash_attn: bool=True):
 
         self.mem_model = Memory(
-            mem_model_name_or_path, cache_dir=cache_dir, beacon_ratio=beacon_ratio, load_in_4bit=load_in_4bit)
+            mem_model_name_or_path, cache_dir=cache_dir, beacon_ratio=beacon_ratio, load_in_4bit=load_in_4bit, enable_flash_attn=enable_flash_attn)
 
         if gen_model_name_or_path:
             self.gen_model = Model(
-                gen_model_name_or_path, cache_dir=cache_dir, access_token=access_token, load_in_4bit=load_in_4bit)      
+                gen_model_name_or_path, cache_dir=cache_dir, access_token=access_token, load_in_4bit=load_in_4bit, enable_flash_attn=enable_flash_attn)      
         elif customized_gen_model:  # for API-based models
             self.gen_model = customized_gen_model
         else:
