@@ -65,13 +65,13 @@ Afterwards, you can view the demo as bellow:
 - [ ] Support Any Model as Memory model
 
 ## :page_with_curl: Changelog
-[09/09/22] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
+[09/09/24] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
 
-[05/09/22] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
+[05/09/24] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
 
-[03/09/22] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
+[03/09/24] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
 
-[01/09/22] The project launched! 
+[01/09/24] The project launched! 
 
 ## :rocket: Quick Start
 :free: **You can directly try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.**
@@ -654,7 +654,7 @@ MemoRAG is licensed under the [<u>MIT License</u>](./LICENSE).
 
 ## Citation
 
-If you use HawkRAG in your research, please cite our paper:
+If you use MemoRAG in your research, please cite our paper:
 
 ```bibtex
 @article{MemoRAG2024,
