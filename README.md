@@ -135,13 +135,13 @@ res = pipe(context=context, query=query, task_type="memorag", max_new_tokens=256
 print(f"MemoRAG generated answer: \n{res}")
 ```
 
-When running the above code, the encoded key-value (KV) cache, Faiss index, and chunked passages are stored in the specified `save_dir`. Afterward, if the same context is used again, the data can be quickly loaded from the disk:
+When running the above code, **the encoded key-value (KV) cache, Faiss index, and chunked passages are stored** in the specified `save_dir`. Afterward, if the same context is used again, the data can be quickly loaded from the disk:
 
 ```python
 pipe.load("cache/harry_potter/", print_stats=True)
 ```
 
-Typically, loading cached weights is highly efficient. For example, encoding, chunking, and indexing a 200K-token context takes approximately 35 seconds using `TommyChien/memorag-qwen2-7b-inst` as the memory model, but only 1.5 seconds when loading from cached files.
+Typically, loading cached weights is highly efficient. For example, **encoding, chunking, and indexing a 200K-token context takes approximately 35 seconds** using `TommyChien/memorag-qwen2-7b-inst` as the memory model, **but only 1.5 seconds when loading from cached files.**
 
 ### Summarization Task
 
