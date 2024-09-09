@@ -16,8 +16,8 @@
 <a href="#rocket-quick-start">Quick-Start</a> |
 <a href="#notebook-usage">Usage</a> |
 <a href="#memorag-demo"> Demo</a> |
-<a href="#raised_hands-faqs"> FAQs</a> |
-<a href="#dataset">Dataset</a>
+<a href="#dataset">Dataset</a> |
+<a href="#raised_hands-faqs"> FAQs</a> 
 </p>
 
 ## Overview
@@ -658,7 +658,7 @@ If you use HawkRAG in your research, please cite our paper:
 
 ```bibtex
 @article{MemoRAG2024,
-  title={MemoRAG: Moving towards Next-Gen RAG On Top Of Long-Term Memory},
+  title={MemoRAG: Moving towards Next-Gen RAG Via Memory-Inspired Knowledge Discovery},
   author={Hongjin Qian, Peitian Zhang, Zheng Liu, Kelong Mao and Zhicheng Dou},
   journal={arXiv preprint arXiv:XXXX.XXXXX},
   year={2024}
