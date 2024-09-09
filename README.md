@@ -1,5 +1,5 @@
 
-# <div align="center">MemoRAG: Moving towards Next-Gen RAG On Top Of Memory-Inspired Retrieval<div>
+# <div align="center">MEMORAG: MOVING TOWARDS NEXT-GEN RAG VIA MEMORY-INSPIRED KNOWLEDGE DISCOVERY<div>
 
 <div align="center">
 <p><strong>Empowering RAG with a versatile model-driven data interface for all-purpose applications!</strong></p>
@@ -14,8 +14,10 @@
 <p>
 <a href="#sparkles-features">Features</a> |
 <a href="#rocket-quick-start">Quick-Start</a> |
-<a href="#memorag-demo"> MemoRAG Demo</a> |
-<a href="#raised_hands-faqs"> FAQs</a>
+<a href="#notebook-usage">Usage</a> |
+<a href="#memorag-demo"> Demo</a> |
+<a href="#dataset">Dataset</a> |
+<a href="#raised_hands-faqs"> FAQs</a> 
 </p>
 
 ## Overview
@@ -24,8 +26,22 @@
 
 
 <p align="center">
-<img src="asset/case.jpg">
+<img src="asset/tech_case.jpg">
 </p>
+
+## MemoRAG Demo
+We will provide a toy demo to demonstrate MemoRAG, you can try with the following scripts:
+
+```python
+streamlit run demo/demo.py
+```
+Afterwards, you can view the demo as bellow:
+
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <img src="./asset/demo.gif" style="width: 100%;">
+  </div>
+</div>
 
 ## :sparkles: Features
 
@@ -76,6 +92,11 @@ conda install -c pytorch -c nvidia faiss-gpu=1.8.0
 # clone this repo first
 cd MemoRAG
 pip install -e .
+```
+
+**Install via pip**
+```
+pip install memorag
 ```
 
 For **Quick Start**,
@@ -286,7 +307,7 @@ Below are experiments results for the memory model, incorporating with three gen
             <td></td>
             <td colspan="8"><strong>LongBench</strong></td>
             <td colspan="2"><strong>InfBench</strong></td>
-            <td colspan="3"><strong>LongDomain</strong></td>
+            <td colspan="3"><strong>UltraDomain</strong></td>
         </tr>
     </thead>
     <tbody>
@@ -620,22 +641,10 @@ We will update other evaluation scripts soon.
 
 ### Dataset
 
-We will upload all datasets used in MemoRAG to [this repo](https://huggingface.co/datasets/TommyChien/MemoRAG).
+UltraDomain Benchmark: [this repo](https://huggingface.co/datasets/TommyChien/UltraDomain).
 
+Other Evaluation Data: [this repo](https://huggingface.co/datasets/TommyChien/MemoRAG-data/).
 
-## MemoRAG Demo
-We provide a toy demo to demonstrate MemoRAG, you can try with the following scripts:
-
-```python
-streamlit run demo/demo.py
-```
-Afterwards, you can view the demo as bellow:
-
-<div style="display: flex; justify-content: space-around;">
-  <div style="text-align: center;">
-    <img src="./asset/demo.gif" style="width: 100%;">
-  </div>
-</div>
 
 ## :raised_hands: FAQs
 
@@ -649,13 +658,12 @@ If you use HawkRAG in your research, please cite our paper:
 
 ```bibtex
 @article{MemoRAG2024,
-  title={MemoRAG: Moving towards Next-Gen RAG On Top Of Long-Term Memory},
+  title={MemoRAG: Moving towards Next-Gen RAG Via Memory-Inspired Knowledge Discovery},
   author={Hongjin Qian, Peitian Zhang, Zheng Liu, Kelong Mao and Zhicheng Dou},
   journal={arXiv preprint arXiv:XXXX.XXXXX},
   year={2024}
 }
 ```
-
 
 
 

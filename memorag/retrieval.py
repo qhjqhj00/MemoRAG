@@ -75,7 +75,8 @@ class DenseRetriever:
         dtype:str="fp16", 
         cache_dir:Optional[str]=None, 
         query_instruct:str=None, 
-        doc_instruct:str=None) -> None:
+        doc_instruct:str=None,
+        load_in_4bit:bool=False) -> None:
         self.name = encoder
         self.query_instruct = query_instruct
         self.doc_instruct = doc_instruct
@@ -95,7 +96,7 @@ class DenseRetriever:
             dtype = torch.float32
 
         self.tokenizer = AutoTokenizer.from_pretrained(encoder, cache_dir=cache_dir)
-        self.encoder = AutoModel.from_pretrained(encoder, cache_dir=cache_dir, torch_dtype=dtype, device_map={'': "cuda"}).eval()
+        self.encoder = AutoModel.from_pretrained(encoder, cache_dir=cache_dir, torch_dtype=dtype, device_map={'': "cuda"}, load_in_4bit=load_in_4bit).eval()
 
         self.ndim = self.encoder.config.hidden_size
         self._index = None
