@@ -16,7 +16,8 @@
 <a href="#rocket-quick-start">Quick-Start</a> |
 <a href="#notebook-usage">Usage</a> |
 <a href="#memorag-demo"> Demo</a> |
-<a href="#raised_hands-faqs"> FAQs</a>
+<a href="#raised_hands-faqs"> FAQs</a> |
+<a href="Dataset">Dataset</a>
 </p>
 
 ## Overview
@@ -640,9 +641,9 @@ We will update other evaluation scripts soon.
 
 ### Dataset
 
-We will upload all datasets used in MemoRAG to [this repo](https://huggingface.co/datasets/TommyChien/MemoRAG).
+UltraDomain Benchmark: [this repo](https://huggingface.co/datasets/TommyChien/UltraDomain).
 
-
+Other Evaluation Data: [this repo](https://huggingface.co/datasets/TommyChien/MemoRAG-data/).
 
 
 ## :raised_hands: FAQs
