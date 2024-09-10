@@ -2,7 +2,7 @@
 # <div align="center">MemoRAG: Moving Towards Next-Gen RAG Via Memory-Inspired Knowledge Discovery<div>
 
 <div align="center">
-<p><strong>Empowering RAG with a versatile model-driven data interface for all-purpose applications!</strong></p>
+<p><strong>Empowering RAG with a memory-based data interface for all-purpose applications!</strong></p>
 <a href="https://arxiv.org/abs/2409.05591" target="_blank"><img src=https://img.shields.io/badge/arXiv-b5212f.svg?logo=arxiv></a>
 <a href="https://huggingface.co/TommyChien/memorag-qwen2-7b-inst" target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace%20Model-27b3b4.svg></a>
 <a href="https://github.com/"><img alt="License" src="https://img.shields.io/badge/LICENSE-MIT-green"></a>
