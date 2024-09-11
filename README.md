@@ -55,12 +55,13 @@ Afterwards, you can view the demo as bellow:
 ## :mag_right: Roadmap
 **MemoRAG**  is currently under active development, with resources and prototypes continuously being published at this repository.
 - [x] Initial Codes Release
-- [x] Memory Model Release
+- [x] Memory Model Release 
 - [x] Support OpenAI/Azure models
 - [x] Add evaluation scripts on benchmarks
 - [x] Dataset Release
 - [x] Technical Report Release
 - [ ] Demo Codes Release
+- [ ] Support More Languages (e.g., Chinese)
 - [ ] Training Codes for Memory model Release
 - [ ] Support Any Model as Memory model
 
