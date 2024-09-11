@@ -54,16 +54,16 @@ Afterwards, you can view the demo as bellow:
 
 ## :mag_right: Roadmap
 **MemoRAG**  is currently under active development, with resources and prototypes continuously being published at this repository.
-- [x] Initial Codes Release
-- [x] Memory Model Release 
+- [x] Codes / Models / Dataset Release 
 - [x] Support OpenAI/Azure models
-- [x] Add evaluation scripts on benchmarks
-- [x] Dataset Release
 - [x] Technical Report Release
 - [ ] Demo Codes Release
-- [ ] Support More Languages (e.g., Chinese)
 - [ ] Training Codes for Memory model Release
-- [ ] Support Any Model as Memory model
+- [ ] **Support More Languages (e.g., Chinese)**
+- [ ] **Light-Weight Optimization**
+- [ ] **Enrich the Memory Ability**
+
+Note: The recent goals of MemoRAG are to achieve light-weight optimization through engineering improvements and to enhance its memory capabilities, enabling it to adapt to a wider range of applications and support additional languages.
 
 ## :page_with_curl: Changelog
 [10/09/24] We release MemoRAG's [`Technical Report`](https://arxiv.org/pdf/2409.05591).
