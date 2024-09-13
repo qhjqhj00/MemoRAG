@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 examples/data/*
+examples/cache
 # C extensions
 test.py
 *.so

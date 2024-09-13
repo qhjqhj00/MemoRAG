@@ -1,17 +1,31 @@
 import torch
 from transformers.utils import logging
 from typing import Dict, Union, List, Optional
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, DynamicCache
+from transformers.tokenization_utils_base import BatchEncoding
 from itertools import chain
 from semantic_text_splitter import TextSplitter
 from .retrieval import DenseRetriever, FaissIndex
 from typing import Dict, List, Union
-from .prompt import prompts
+from .prompt import en_prompts, zh_prompts
 import os 
 import json
 import tiktoken
+import copy
+from minference import MInference
 
 logger = logging.get_logger(__name__)          
+
+def merge_inputs(inputs1: BatchEncoding, inputs2: BatchEncoding) -> BatchEncoding:
+
+    merged_input_ids = torch.cat([inputs1['input_ids'], inputs2['input_ids']], dim=1)
+    merged_attention_mask = torch.cat([inputs1['attention_mask'], inputs2['attention_mask']], dim=1)
+    
+    merged_inputs = BatchEncoding({
+        'input_ids': merged_input_ids,
+        'attention_mask': merged_attention_mask
+    })
+    return merged_inputs
 
 class Model:
     def __init__(
@@ -32,17 +46,27 @@ class Model:
         else:
             attn_implementation = None
 
-        model_kwargs = {
+        if model_name_or_path.find("memorag") == -1:
+            load_in_4bit = True
+
+        self.model_kwargs = {
             "cache_dir": cache_dir,
             "token": access_token,
             "device_map": {"": device},
             "attn_implementation": attn_implementation,
             "torch_dtype": torch.bfloat16,
             "trust_remote_code": True,
-            "load_in_4bit": load_in_4bit
         }
-        if beacon_ratio:
-            model_kwargs["beacon_ratio"] = [beacon_ratio]
+        self.model_name_or_path = model_name_or_path
+
+        if load_in_4bit:
+            quant_config = BitsAndBytesConfig(
+                    load_in_4bit=load_in_4bit
+                )
+            self.model_kwargs["quantization_config"] = quant_config
+
+        if beacon_ratio and model_name_or_path.find("memorag") != -1:
+            self.model_kwargs["beacon_ratio"] = [beacon_ratio]
 
         tokenizer_kwargs = {
             "cache_dir": cache_dir,
@@ -58,7 +82,7 @@ class Model:
 
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name_or_path, 
-            **model_kwargs
+            **self.model_kwargs
         ).eval()
 
         logger.info(f"Model loaded from {model_name_or_path}")
@@ -112,6 +136,19 @@ class Model:
 
         return inputs
 
+    def minference_patch(self, model_type:str="meta-llama/Meta-Llama-3.1-8B-Instruct"):
+        minference_patch = MInference("minference", model_type)
+        self.model=minference_patch(self.model)
+
+    def reload_model(self):
+        # TODO 
+        del self.model
+        torch.cuda.empty_cache()
+        self.model = AutoModelForCausalLM.from_pretrained(
+            self.model_name_or_path, 
+            **self.model_kwargs
+        ).eval()
+
     def generate(
         self, 
         prompts: Union[str, List[str]], 
@@ -129,9 +166,9 @@ class Model:
             "max_new_tokens": max_new_tokens,
             "do_sample": do_sample,
             "temperature": temperature,
-            "top_p": top_p
+            "top_p": top_p,
         }
-
+            
         all_outputs = []
 
         for i in range(0, len(prompts), batch_size):
@@ -148,20 +185,41 @@ class Memory(Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.memory = None
+        if self.model_name_or_path.find("memorag") != -1:
+            self.memo_type = "beacon"
+        else:
+            self.memo_type = "longllm"
+
+        if self.model_name_or_path.lower().find("chinese") != -1:
+            self.prompts = zh_prompts
+        else:
+            self.prompts = en_prompts
 
     def memorize(
         self, 
         context, 
-        max_length=None
+        max_length=None,
+        reload_model:bool=True
     ):
-        self.reset() 
+        
         context_inputs = self.template2ids([[
-            {"role": "user", "content": prompts["context"].format(context=context)},
+            {"role": "user", "content": self.prompts["context"].format(context=context)},
             {"role": "assistant", "content": "I have read the article. Please provide your question."}
         ]])
-
-        self.model(**context_inputs)
-        self.memory = self.model.memory.export()
+        if self.memo_type == "beacon":
+            self.reset() 
+            with torch.no_grad():
+                self.model(**context_inputs)
+            self.memory = self.model.memory.export()
+        elif self.memo_type == "longllm":
+            self.minference_patch()
+            self.memory = DynamicCache()
+            with torch.no_grad():
+                model_outputs = self.model(**context_inputs, past_key_values=self.memory)
+            self.memory = model_outputs.past_key_values
+            self.context_inputs = context_inputs
+            if reload_model:
+                self.reload_model()
 
     def reset(
         self
@@ -171,22 +229,22 @@ class Memory(Model):
 
     def answer(
         self,
-        query) -> str:
-        return self.generate(prompts["qa"], query, 128)[0][0]
+        query, max_new_tokens=128) -> str:
+        return self.generate(self.prompts["qa"], query, max_new_tokens=max_new_tokens)[0]
 
     def recall(
         self,
-        query) -> str:
-        return self.generate(prompts["span"], query, 256)[0][0]
+        query, max_new_tokens=128) -> str:
+        return self.generate(self.prompts["span"], query, max_new_tokens=max_new_tokens)[0]
 
     def rewrite(
         self,
-        query) -> str:
-        return self.generate(prompts["sur"], query, 256)[0][0]
+        query, max_new_tokens=128) -> str:
+        return self.generate(self.prompts["sur"], query, max_new_tokens=max_new_tokens)[0]
 
     def summarize(
         self, max_new_tokens:int=512) -> str:
-        return self.generate(prompts["sum"], max_new_tokens=max_new_tokens)[0][0]
+        return self.generate(self.prompts["sum"], max_new_tokens=max_new_tokens)[0]
 
     def generate(
         self, 
@@ -196,36 +254,60 @@ class Memory(Model):
         temperature: float = None,
         top_p: float = None,
         do_sample: bool = False,
+        with_cache: bool = True
     ) -> List[str]:
         if not self.memory:
             raise ValueError("Memory is not initialized. Please ensure that memory has been formed before using generate.")
 
         if isinstance(instruct, str):
             instruct = [instruct]
-
+    
         generation_kwargs = {
             "max_new_tokens": max_new_tokens,
             "do_sample": do_sample,
             "temperature": temperature,
             "top_p": top_p
         }
+        if self.memo_type == "longllm" and with_cache:
+            generation_kwargs["past_key_values"] = copy.deepcopy(self.memory)
+
         outputs = []
 
         for i, inst in enumerate(instruct):
-            self.model.memory.reset(**self.memory)
+            if self.memo_type == "beacon":
+                self.model.memory.reset(**self.memory)
             if query:
                 sample_inputs = self.template2ids([[{"role": "user", "content": inst.format(question=query)}]])
             else:
                 sample_inputs = self.template2ids([[{"role": "user", "content": inst}]])
+            if self.memo_type == "longllm" and with_cache:
+                sample_inputs = merge_inputs(self.context_inputs, sample_inputs)
             response = self.ids2text(sample_inputs, **generation_kwargs)
-            outputs.append(response)
+            outputs.extend(response)
+            if self.memo_type == "longllm" and with_cache:
+                del generation_kwargs["past_key_values"]
+                torch.cuda.empty_cache() 
         return outputs
     
     def save(self, path):
-        torch.save(self.memory, path)
-
+        if self.memo_type == "beacon":
+            torch.save(self.memory, path)
+        elif self.memo_type == "longllm":
+            torch.save(
+                {"memory": self.memory,
+                 "context_inputs": self.context_inputs}, 
+                 path)
+        else:
+            raise NotImplementedError
+        
     def load(self, path):
-        self.memory = torch.load(path)
+        if self.memo_type == "beacon":
+            self.memory = torch.load(path)
+        elif self.memo_type == "longllm":
+            _cache = torch.load(path)
+            self.memory = _cache["memory"]
+            self.context_inputs = _cache["context_inputs"]
+        
 
 class MemoRAG:
     def __init__(
@@ -241,6 +323,12 @@ class MemoRAG:
         beacon_ratio:int=4,
         load_in_4bit:bool=False,
         enable_flash_attn: bool=True):
+
+        if mem_model_name_or_path.lower().find("chinese") != -1:
+            self.prompts = zh_prompts
+            retrieval_chunk_size = 2048
+        else:
+            self.prompts = en_prompts
 
         self.mem_model = Memory(
             mem_model_name_or_path, cache_dir=cache_dir, beacon_ratio=beacon_ratio, load_in_4bit=load_in_4bit, enable_flash_attn=enable_flash_attn)
@@ -260,6 +348,8 @@ class MemoRAG:
             "gpt-3.5-turbo", retrieval_chunk_size)
 
     def memorize(self, context: str, save_dir: str = None, print_stats: bool = False):
+        self.retriever.remove_all()
+
         self.mem_model.memorize(context)
         self.retrieval_corpus = self.text_splitter.chunks(context)
         self.retriever.add(self.retrieval_corpus)
@@ -315,7 +405,7 @@ class MemoRAG:
             self.memorize(context)
 
         if task_type == 'qa':
-            return self._handle_qa(query)
+            return self._handle_qa(query, max_new_tokens)
         elif task_type == 'memorag':
             return self._handle_rag(query, prompt_template, max_new_tokens, use_memory_answer)
         elif task_type == 'summarize':
@@ -323,8 +413,8 @@ class MemoRAG:
         else:
             raise NotImplementedError(f"Task type '{task_type}' is not supported.")
 
-    def _handle_qa(self, query: str):
-        return self.mem_model.answer(query)
+    def _handle_qa(self, query: str, max_new_tokens:int=128):
+        return self.mem_model.answer(query, max_new_tokens)
 
     def _handle_rag(self, query: str, prompt_template: str, max_new_tokens: int, use_memory_answer: bool):
         text_spans = self.mem_model.recall(query)
@@ -369,14 +459,15 @@ class MemoRAG:
         if prompt_template:
             prompt = prompt_template.format(input=query, context=knowledge) if query else prompt_template.format(context=knowledge)
         else:
-            prompt = prompts[task_key].format(input=query, context=knowledge) if query else prompts[task_key].format(context=knowledge)
+            prompt = self.prompts[task_key].format(input=query, context=knowledge) if query else self.prompts[task_key].format(context=knowledge)
 
-        if self.gen_model.__class__.__name__ == "Memory":
+        if self.gen_model.__class__.__name__ == "Memory" and self.mem_model.memo_type == "beacon":
             self.gen_model._enable_beacon = False
             output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
             self.gen_model._enable_beacon = True
         else:
-            output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
+            output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens, with_cache=False)[0]
+        torch.cuda.empty_cache() 
         return output
     
 

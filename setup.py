@@ -8,7 +8,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="memorag",
-    version="0.1",
+    version="0.1.4",
     description="A Python package for memory-augmented retrieval-augmented generation",
     long_description=long_description,
     long_description_content_type="text/markdown",
