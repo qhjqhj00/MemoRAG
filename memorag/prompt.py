@@ -1,5 +1,5 @@
 
-prompts = {
+en_prompts = {
     "context": """You are provided with a long article. Read the article carefully. After reading, you will be asked to perform specific tasks based on the content of the article.
 
 Now, the article begins:
@@ -42,6 +42,59 @@ Your task is to create a concise summary of the long article by listing its key 
 - Ensure that each key point captures the most critical and relevant information from the article.
 - Maintain clarity and coherence, making sure the summary effectively conveys the essence of the article.
 """,
-    "qa_gen": "Read the text below and answer a question.\n\n{context}\n\nQuestion: {input}\n\nBe very concise.",
+    "qa_gen": "Read the text below and answer a question.\n\n{context}\n\nQuestion: {input}\n\nBe concise.",
     "sum_gen": "Summarize the following text.\n\n{context}"
+}
+
+
+zh_prompts = {
+    "context": """你将获得一篇长文章。请仔细阅读这篇文章。阅读完成后，你将根据文章的内容执行特定任务。
+
+现在，文章开始：
+- **文章内容：** {context}
+
+文章到此结束。
+
+接下来，请按照给出的指示完成任务。""",
+
+    "sur": """
+你会得到一个与文章相关的问题。为了有效地回答这个问题，你需要回想文章中的具体细节。你的任务是生成精确的线索问题，帮助找到文章中必要的信息。
+
+### 问题：{question}
+### 指示：
+1. 你对文章有一个大致的理解。你的任务是生成一个或多个具体的线索，帮助查找文章中的支持证据。
+2. 线索应以精确的替代问题形式呈现，澄清原问题。
+3. 只输出线索。如果有多个线索，请用换行符分隔。
+4. 请用中文回答。""",
+
+    "span": """
+你会得到一个与文章相关的问题。为了有效地回答这个问题，你需要回想文章中的具体细节。你的任务是识别并提取文章中与问题相关的一个或多个具体线索文本。
+
+### 问题：{question}
+### 指示：
+1. 你对文章有一个大致的理解。你的任务是生成一个或多个具体的线索，帮助查找文章中的支持证据。
+2. 线索应以文本片段的形式呈现，这些片段将有助于回答问题。
+3. 只输出线索。如果有多个线索，请用换行符分隔。
+4. 请用中文回答。""",
+
+    "qa": """
+你会得到一个与文章相关的问题。你的任务是直接回答这个问题。
+
+### 问题：{question}
+### 指示：
+基于文章的内容，直接回答问题。不要包含除答案之外的任何额外内容。""",
+
+    "sum": """
+你的任务是通过列出文章的关键点来创建一个简明的总结。每个关键点应按顺序逐行列出并编号。
+
+### 要求：
+
+- 关键点应简短，并着重于主要思想或事件。
+- 确保每个关键点都捕捉到文章中最重要和相关的信息。
+- 保持清晰连贯，确保摘要能有效传达文章的精髓。
+- 请用中文回答。""",
+
+    "qa_gen": "阅读以下文本并回答问题。\n\n{context}\n\n问题：{input}\n\n请简明扼要地回答，请使用中文回答。",
+
+    "sum_gen": "请总结以下文本，请输出中文。\n\n{context}"
 }
