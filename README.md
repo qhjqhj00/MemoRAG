@@ -1,10 +1,10 @@
 
-# <div align="center">MEMORAG: MOVING TOWARDS NEXT-GEN RAG VIA MEMORY-INSPIRED KNOWLEDGE DISCOVERY<div>
+# <div align="center">MemoRAG: Moving Towards Next-Gen RAG Via Memory-Inspired Knowledge Discovery<div>
 
 <div align="center">
-<p><strong>Empowering RAG with a versatile model-driven data interface for all-purpose applications!</strong></p>
-<a href="https://arxiv.org/" target="_blank"><img src=https://img.shields.io/badge/arXiv-b5212f.svg?logo=arxiv></a>
-<a href="https://huggingface.co/models" target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace%20Model-27b3b4.svg></a>
+<p><strong>Empowering RAG with a memory-based data interface for all-purpose applications!</strong></p>
+<a href="https://arxiv.org/abs/2409.05591" target="_blank"><img src=https://img.shields.io/badge/arXiv-b5212f.svg?logo=arxiv></a>
+<a href="https://huggingface.co/TommyChien/memorag-qwen2-7b-inst" target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace%20Model-27b3b4.svg></a>
 <a href="https://github.com/"><img alt="License" src="https://img.shields.io/badge/LICENSE-MIT-green"></a>
 <a><img alt="Static Badge" src="https://img.shields.io/badge/made_with-Python-blue"></a>
 </div>
@@ -54,24 +54,27 @@ Afterwards, you can view the demo as bellow:
 
 ## :mag_right: Roadmap
 **MemoRAG**  is currently under active development, with resources and prototypes continuously being published at this repository.
-- [x] Initial Codes Release
-- [x] Memory Model Release
+- [x] Codes / Models / Dataset Release 
 - [x] Support OpenAI/Azure models
-- [x] Add evaluation scripts on benchmarks
-- [x] Dataset Release
-- [ ] Technical Report Release
+- [x] Technical Report Release
 - [ ] Demo Codes Release
 - [ ] Training Codes for Memory model Release
-- [ ] Support Any Model as Memory model
+- [ ] **Support More Languages (e.g., Chinese)**
+- [ ] **Light-Weight Optimization**
+- [ ] **Enrich the Memory Ability**
+
+Note: The recent goals of MemoRAG are to achieve light-weight optimization through engineering improvements and to enhance its memory capabilities, enabling it to adapt to a wider range of applications and support additional languages.
 
 ## :page_with_curl: Changelog
-[09/09/22] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
+[10/09/24] We release MemoRAG's [`Technical Report`](https://arxiv.org/pdf/2409.05591).
 
-[05/09/22] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
+[09/09/24] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
 
-[03/09/22] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
+[05/09/24] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
 
-[01/09/22] The project launched! 
+[03/09/24] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
+
+[01/09/24] The project launched! 
 
 ## :rocket: Quick Start
 :free: **You can directly try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.**
@@ -654,17 +657,17 @@ MemoRAG is licensed under the [<u>MIT License</u>](./LICENSE).
 
 ## Citation
 
-If you use HawkRAG in your research, please cite our paper:
+If you use MemoRAG in your research, please cite our paper:
 
 ```bibtex
-@article{MemoRAG2024,
-  title={MemoRAG: Moving towards Next-Gen RAG Via Memory-Inspired Knowledge Discovery},
-  author={Hongjin Qian, Peitian Zhang, Zheng Liu, Kelong Mao and Zhicheng Dou},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
-  year={2024}
+@misc{qian2024memorag,
+      title={MemoRAG: Moving towards Next-Gen RAG Via Memory-Inspired Knowledge Discovery}, 
+      author={Hongjin Qian and Peitian Zhang and Zheng Liu and Kelong Mao and Zhicheng Dou},
+      year={2024},
+      eprint={2409.05591},
+      url={https://arxiv.org/abs/2409.05591}, 
 }
 ```
-
 
 
 
