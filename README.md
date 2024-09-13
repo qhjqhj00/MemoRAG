@@ -43,6 +43,19 @@ Afterwards, you can view the demo as bellow:
   </div>
 </div>
 
+## :page_with_curl: Changelog
+[13/09/24] MemoRAG adds `Meta-Llama-3.1-8B-Instruct` and `Llama3.1-8B-Chinese-Chat` as the Memory Model, see [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/longllm_as_memory.ipynb). 
+
+[10/09/24] We release MemoRAG's [`Technical Report`](https://arxiv.org/pdf/2409.05591).
+
+[09/09/24] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
+
+[05/09/24] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
+
+[03/09/24] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
+
+[01/09/24] The project launched! 
+
 ## :sparkles: Features
 
 
@@ -65,18 +78,6 @@ Afterwards, you can view the demo as bellow:
 
 Note: The **recent goals** of MemoRAG are to achieve **light-weight optimization** through engineering improvements and to **enhance its memory capabilities**, enabling it to adapt to a wider range of applications and **support longer context** (e.g., more than one million tokens). 
 
-## :page_with_curl: Changelog
-[13/09/24] MemoRAG adds `Meta-Llama-3.1-8B-Instruct` and `Llama3.1-8B-Chinese-Chat` as the Memory Model, see [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/longllm_as_memory.ipynb). 
-
-[10/09/24] We release MemoRAG's [`Technical Report`](https://arxiv.org/pdf/2409.05591).
-
-[09/09/24] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
-
-[05/09/24] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
-
-[03/09/24] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
-
-[01/09/24] The project launched! 
 
 ## :rocket: Quick Start
 :free: **You can directly try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.**
