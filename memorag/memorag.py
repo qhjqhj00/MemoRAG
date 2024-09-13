@@ -49,7 +49,6 @@ class Model:
         if model_name_or_path.find("memorag") == -1:
             load_in_4bit = True
 
-
         self.model_kwargs = {
             "cache_dir": cache_dir,
             "token": access_token,
@@ -231,21 +230,21 @@ class Memory(Model):
     def answer(
         self,
         query, max_new_tokens=128) -> str:
-        return self.generate(self.prompts["qa"], query, max_new_tokens=max_new_tokens)[0][0]
+        return self.generate(self.prompts["qa"], query, max_new_tokens=max_new_tokens)[0]
 
     def recall(
         self,
         query, max_new_tokens=128) -> str:
-        return self.generate(self.prompts["span"], query, max_new_tokens=max_new_tokens)[0][0]
+        return self.generate(self.prompts["span"], query, max_new_tokens=max_new_tokens)[0]
 
     def rewrite(
         self,
         query, max_new_tokens=128) -> str:
-        return self.generate(self.prompts["sur"], query, max_new_tokens=max_new_tokens)[0][0]
+        return self.generate(self.prompts["sur"], query, max_new_tokens=max_new_tokens)[0]
 
     def summarize(
         self, max_new_tokens:int=512) -> str:
-        return self.generate(self.prompts["sum"], max_new_tokens=max_new_tokens)[0][0]
+        return self.generate(self.prompts["sum"], max_new_tokens=max_new_tokens)[0]
 
     def generate(
         self, 
@@ -284,7 +283,7 @@ class Memory(Model):
             if self.memo_type == "longllm" and with_cache:
                 sample_inputs = merge_inputs(self.context_inputs, sample_inputs)
             response = self.ids2text(sample_inputs, **generation_kwargs)
-            outputs.append(response)
+            outputs.extend(response)
             if self.memo_type == "longllm" and with_cache:
                 del generation_kwargs["past_key_values"]
                 torch.cuda.empty_cache() 
@@ -349,6 +348,8 @@ class MemoRAG:
             "gpt-3.5-turbo", retrieval_chunk_size)
 
     def memorize(self, context: str, save_dir: str = None, print_stats: bool = False):
+        self.retriever.remove_all()
+
         self.mem_model.memorize(context)
         self.retrieval_corpus = self.text_splitter.chunks(context)
         self.retriever.add(self.retrieval_corpus)
