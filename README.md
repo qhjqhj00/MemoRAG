@@ -13,7 +13,7 @@
 
 <p>
 <a href="#rocket-quick-start">Quick-Start</a> |
-<a href="#rocket-quick-start">Colab</a> |
+<a href="#mag_right-roadmap">Roadmap</a> |
 <a href="#notebook-usage">Usage</a> |
 <a href="#memorag-demo"> Demo</a> |
 <a href="#dataset">Dataset</a> |
@@ -43,6 +43,19 @@ Afterwards, you can view the demo as bellow:
   </div>
 </div>
 
+## :page_with_curl: Changelog
+[13/09/24] MemoRAG adds `Meta-Llama-3.1-8B-Instruct` and `Llama3.1-8B-Chinese-Chat` as the Memory Model, see [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/longllm_as_memory.ipynb). 
+
+[10/09/24] We release MemoRAG's [`Technical Report`](https://arxiv.org/pdf/2409.05591).
+
+[09/09/24] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
+
+[05/09/24] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
+
+[03/09/24] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
+
+[01/09/24] The project launched! 
+
 ## :sparkles: Features
 
 
@@ -57,24 +70,14 @@ Afterwards, you can view the demo as bellow:
 - [x] Codes / Models / Dataset Release 
 - [x] Support OpenAI/Azure models
 - [x] Technical Report Release
+- [x] Support Chinese 
 - [ ] Demo Codes Release
 - [ ] Training Codes for Memory model Release
-- [ ] **Support More Languages (e.g., Chinese)**
 - [ ] **Light-Weight Optimization**
 - [ ] **Enrich the Memory Ability**
 
-Note: The recent goals of MemoRAG are to achieve light-weight optimization through engineering improvements and to enhance its memory capabilities, enabling it to adapt to a wider range of applications and support additional languages.
+Note: The **recent goals** of MemoRAG are to achieve **light-weight optimization** through engineering improvements and to **enhance its memory capabilities**, enabling it to adapt to a wider range of applications and **support longer context** (e.g., more than one million tokens). 
 
-## :page_with_curl: Changelog
-[10/09/24] We release MemoRAG's [`Technical Report`](https://arxiv.org/pdf/2409.05591).
-
-[09/09/24] You can try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.
-
-[05/09/24] A Qwen2-based memory model is available at [`TommyChien/memorag-qwen2-7b-inst`](https://huggingface.co/TommyChien/memorag-qwen2-7b-inst).
-
-[03/09/24] A Mistral-based memory model is available at [`TommyChien/memorag-mistral-7b-inst`](https://huggingface.co/TommyChien/memorag-mistral-7b-inst).
-
-[01/09/24] The project launched! 
 
 ## :rocket: Quick Start
 :free: **You can directly try MemoRAG on [`Google Colab`](https://colab.research.google.com/drive/1fPMXKyi4AwWSBkC7Xr5vBdpPpx9gDeFX?usp=sharing) for free.**
@@ -145,6 +148,22 @@ pipe.load("cache/harry_potter/", print_stats=True)
 ```
 
 Typically, loading cached weights is highly efficient. For example, **encoding, chunking, and indexing a 200K-token context takes approximately 35 seconds** using `TommyChien/memorag-qwen2-7b-inst` as the memory model, **but only 1.5 seconds when loading from cached files.**
+
+### Using Long LLMs as Memory Model :new: :new: :new: 
+Recent LLMs have become effective memory models due to their expanding context windows. MemoRAG now supports leveraging these long-context LLMs as memory models, utilizing [`MInference`](https://github.com/microsoft/MInference) to optimize context prefilling. We have tested `Meta-Llama-3.1-8B-Instruct` and `Llama3.1-8B-Chinese-Chat` as memory models, both of which natively support a 128K context length. We are currently exploring additional suitable LLMs and optimizing strategies to enhance the memory mechanisms and context length further. For detailed usage instructions, please refer to the provided scripts and the [`notebook`](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/longllm_as_memory.ipynb):
+
+```python
+from memorag import MemoRAG
+model = MemoRAG(
+    mem_model_name_or_path="shenzhi-wang/Llama3.1-8B-Chinese-Chat",    # For Chinese
+    # mem_model_name_or_path="meta-llama/Meta-Llama-3.1-8B-Instruct",  # For English
+    ret_model_name_or_path="BAAI/bge-m3",
+    # cache_dir="path_to_model_cache",  # to specify local model cache directory (optional)
+    # access_token="hugging_face_access_token"  # to specify local model cache directory (optional)
+    )
+```
+Afterward, you can use MemoRAG's functions as usual. 
+
 
 ### Summarization Task
 
