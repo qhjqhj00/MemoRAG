@@ -35,7 +35,7 @@ We will provide a toy demo to demonstrate MemoRAG, you can try with the followin
 ```python
 streamlit run demo/demo.py
 ```
-Afterwards, you can view the demo as bellow:
+Afterwards, you can view the demo as below:
 
 <div style="display: flex; justify-content: space-around;">
   <div style="text-align: center;">
