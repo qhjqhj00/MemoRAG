@@ -35,7 +35,7 @@ We will provide a toy demo to demonstrate MemoRAG, you can try with the followin
 ```python
 streamlit run demo/demo.py
 ```
-Afterwards, you can view the demo as bellow:
+Afterwards, you can view the demo as below:
 
 <div style="display: flex; justify-content: space-around;">
   <div style="text-align: center;">
@@ -74,6 +74,8 @@ Afterwards, you can view the demo as bellow:
 - [ ] Demo Codes Release
 - [ ] Training Codes for Memory model Release
 - [ ] **Light-Weight Optimization**
+- [ ] **Speed Up Inference**
+- [ ] **Integrate Any Retrieval Methods**
 - [ ] **Enrich the Memory Ability**
 
 Note: The **recent goals** of MemoRAG are to achieve **light-weight optimization** through engineering improvements and to **enhance its memory capabilities**, enabling it to adapt to a wider range of applications and **support longer context** (e.g., more than one million tokens). 
