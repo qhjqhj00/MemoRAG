@@ -157,6 +157,7 @@ class Model:
         temperature: float = None,
         top_p: float = None,
         do_sample: bool = False,
+        repetition_penalty:float=1.0
     ) -> Union[str, List[str]]:
 
         if isinstance(prompts, str):
@@ -167,6 +168,7 @@ class Model:
             "do_sample": do_sample,
             "temperature": temperature,
             "top_p": top_p,
+            "repetition_penalty": repetition_penalty
         }
             
         all_outputs = []
@@ -387,9 +389,9 @@ class MemoRAG:
             
     def __call__(
         self, 
-        context: str, 
         query: str = None, 
-        task_type: str = "rag", 
+        context: str = None, 
+        task_type: str = "memorag", 
         prompt_template: str = None,
         max_new_tokens: int = 256,
         reset_each_call: bool = False,
@@ -402,6 +404,8 @@ class MemoRAG:
             self.retriever.remove_all()
 
         if not self.mem_model.memory:
+            if not context:
+                raise ValueError("Please provide your input context...")
             self.memorize(context)
 
         if task_type == 'qa':
@@ -462,12 +466,10 @@ class MemoRAG:
             prompt = self.prompts[task_key].format(input=query, context=knowledge) if query else self.prompts[task_key].format(context=knowledge)
 
         if self.gen_model.__class__.__name__ == "Memory" and self.mem_model.memo_type == "beacon":
-            self.gen_model._enable_beacon = False
+            # self.gen_model._enable_beacon = False
             output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
-            self.gen_model._enable_beacon = True
+            # self.gen_model._enable_beacon = True
         else:
             output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens, with_cache=False)[0]
         torch.cuda.empty_cache() 
         return output
-    
-

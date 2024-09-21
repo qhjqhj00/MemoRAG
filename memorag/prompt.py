@@ -43,9 +43,10 @@ Your task is to create a concise summary of the long article by listing its key 
 - Maintain clarity and coherence, making sure the summary effectively conveys the essence of the article.
 """,
     "qa_gen": "Read the text below and answer a question.\n\n{context}\n\nQuestion: {input}\n\nBe concise.",
-    "sum_gen": "Summarize the following text.\n\n{context}"
+    "sum_gen": "Summarize the following text.\n\n{context}",
+    "gist": "Please summarize the core content of the following text, remove redundant information, and compress it into concise and accurate text. Retain all key facts and points. The language should be straightforward and concise, and do not use any formatting.\n\nText: {context}\n\nPlease output the core content directly.",
+    "dull_reply": "I have read the article. Please provide your question."
 }
-
 
 zh_prompts = {
     "context": """你将获得一篇长文章。请仔细阅读这篇文章。阅读完成后，你将根据文章的内容执行特定任务。
@@ -96,5 +97,8 @@ zh_prompts = {
 
     "qa_gen": "阅读以下文本并回答问题。\n\n{context}\n\n问题：{input}\n\n请简明扼要地回答，请使用中文回答。",
 
-    "sum_gen": "请总结以下文本，请输出中文。\n\n{context}"
+    "sum_gen": "请总结以下文本，请输出中文。\n\n{context}", 
+    "gist": "请总结以下文本的核心内容，删除冗余信息，压缩为简洁、准确的文本，保留所有关键事实和要点，语言直观、简明，不要使用任何格式。\n\n文本：{context}\n\n请直接输出核心内容。",
+    "dull_reply": "我已经读完文本，请提出你的问题。"
 }
+
