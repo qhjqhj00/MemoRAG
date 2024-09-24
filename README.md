@@ -44,6 +44,8 @@ Afterwards, you can view the demo as below:
 </div>
 
 ## :page_with_curl: Changelog
+[21/09/24] MemoRAG introduces Lite mode, enabling memory-augmented RAG processing for millions of tokens with just a few lines of code. For more details, refer to the [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/tommy-dev-lite/examples/memorag_lite.ipynb) notebook.
+
 [13/09/24] MemoRAG adds `Meta-Llama-3.1-8B-Instruct` and `Llama3.1-8B-Chinese-Chat` as the Memory Model, see [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/longllm_as_memory.ipynb). 
 
 [10/09/24] We release MemoRAG's [`Technical Report`](https://arxiv.org/pdf/2409.05591).
@@ -115,9 +117,26 @@ We provide a notebook to illustrate all functions of MemoRAG [here](https://gith
 
 ## :notebook: Usage
 
-MemoRAG is easy to use and can be initialized with HuggingFace models directly. By using the `MemoRAG.memorize()` method, the memory model builds a global memory over a long input context. Empirically, with default parameter settings, `TommyChien/memorag-qwen2-7b-inst` can handle contexts of up to 400K tokens, while `TommyChien/memorag-mistral-7b-inst` can manage contexts up to 128K tokens. By increasing the `beacon_ratio` parameter, the model’s capacity to handle longer contexts can be extended. For example, `TommyChien/memorag-qwen2-7b-inst` can process up to one million tokens with `beacon_ratio=16`.
+### Lite Mode of MemoRAG :new: :new: :new: 
+We introduce the Lite Mode of MemoRAG, designed to offer a quick and user-friendly experience with the MemoRAG pipeline. With just a few lines of code, you can easily try MemoRAG. While we recommend starting with a GPU that has 24GiB of memory, a 16GiB GPU can also handle the pipeline under default settings in most cases.
+
+
+```python
+from memorag import MemoRAGLite
+pipe = MemoRAGLite()
+context = open("examples/harry_potter.txt").read()
+pipe.memorize(context, save_dir="harry_potter", print_stats=True)
+
+query = "What's the book's main theme?"
+print(pipe(query))
+```
+MemoRAG Lite is simple to use, supporting English or Chinese contexts of up to millions of tokens. Although it may work with other languages, performance could degrade since the default prompts are in English. For more details on MemoRAG Lite, please refer to the [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/tommy-dev-lite/examples/memorag_lite.ipynb) notebook."
+
+
 
 ### Basic Usage of MemoRAG
+MemoRAG is easy to use and can be initialized with HuggingFace models directly. By using the `MemoRAG.memorize()` method, the memory model builds a global memory over a long input context. Empirically, with default parameter settings, `TommyChien/memorag-qwen2-7b-inst` can handle contexts of up to 400K tokens, while `TommyChien/memorag-mistral-7b-inst` can manage contexts up to 128K tokens. By increasing the `beacon_ratio` parameter, the model’s capacity to handle longer contexts can be extended. For example, `TommyChien/memorag-qwen2-7b-inst` can process up to one million tokens with `beacon_ratio=16`.
+
 
 ```python
 from memorag import MemoRAG
