@@ -12,3 +12,4 @@ seaborn
 tiktoken
 openai
 semantic_text_splitter
+langdetect
