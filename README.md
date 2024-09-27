@@ -75,7 +75,6 @@ Afterwards, you can view the demo as below:
 - [x] Support Chinese 
 - [ ] Demo Codes Release
 - [ ] Training Codes for Memory model Release
-- [ ] **Light-Weight Optimization**
 - [ ] **Speed Up Inference**
 - [ ] **Integrate Any Retrieval Methods**
 - [ ] **Enrich the Memory Ability**
