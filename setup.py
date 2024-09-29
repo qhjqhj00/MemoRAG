@@ -4,7 +4,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 with open("requirements.txt") as f:
-    requirements = f.read().splitlines()
+    minimum_requirements = f.read().splitlines()
+with open("requirements-cuda.txt") as f:
+    cuda_requirements = f.read().splitlines()
 
 setup(
     name="memorag",
@@ -15,7 +17,10 @@ setup(
     author="Tommy Chien",
     author_email="tommy@chien.io",
     packages=find_packages(),
-    install_requires=requirements,
+    install_requires=minimum_requirements,
+    extras_require={
+        "cuda": cuda_requirements,
+    },
     classifiers=[
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
