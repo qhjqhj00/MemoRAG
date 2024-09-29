@@ -10,3 +10,5 @@ openai
 semantic_text_splitter
 langdetect
 faiss-cpu
+bitsandbytes
+accelerate

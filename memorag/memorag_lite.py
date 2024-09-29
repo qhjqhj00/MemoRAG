@@ -23,6 +23,7 @@ from langdetect import detect
 from .memorag import Model, merge_inputs
 from .retrieval import DenseRetriever, FaissIndex
 from .prompt import en_prompts, zh_prompts
+from .config import MemoRAGConfig
 
 try:
     from minference import MInference
@@ -52,6 +53,20 @@ def get_first_gpu_memory():
 
 
 class MemoRAGLite:
+    @classmethod
+    def from_config(cls: "MemoRAGLite", config: MemoRAGConfig):
+        return cls(
+            gen_model_name_or_path=config.gen_model_name_or_path,
+            ret_model_name_or_path=config.ret_model_name_or_path,
+            customized_gen_model=config.customized_gen_model,
+            ret_hit=config.ret_hit,
+            retrieval_chunk_size=config.retrieval_chunk_size,
+            cache_dir=config.cache_dir,
+            access_token=config.access_token,
+            load_in_4bit=config.load_in_4bit,
+            enable_flash_attn=config.enable_flash_attn,
+        )
+
     def __init__(
         self,
         gen_model_name_or_path: str = "Qwen/Qwen2.5-1.5B-Instruct",

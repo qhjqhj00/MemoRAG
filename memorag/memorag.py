@@ -16,6 +16,7 @@ from semantic_text_splitter import TextSplitter
 from .retrieval import DenseRetriever, FaissIndex
 from typing import Dict, List, Union
 from .prompt import en_prompts, zh_prompts
+from .config import MemoRAGConfig
 import os
 import json
 import tiktoken
@@ -61,9 +62,6 @@ class Model:
         else:
             attn_implementation = None
 
-        if model_name_or_path.find("memorag") == -1:
-            load_in_4bit = True
-
         self.model_kwargs = {
             "cache_dir": cache_dir,
             "token": access_token,
@@ -91,7 +89,7 @@ class Model:
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name_or_path, **tokenizer_kwargs
         )
-
+        print(self.model_kwargs)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name_or_path, **self.model_kwargs
         ).eval()
@@ -315,6 +313,21 @@ class Memory(Model):
 
 
 class MemoRAG:
+    @classmethod
+    def from_config(cls: "MemoRAG", config: MemoRAGConfig):
+        return cls(
+            ret_model_name_or_path=config.ret_model_name_or_path,
+            gen_model_name_or_path=config.gen_model_name_or_path,
+            customized_gen_model=config.customized_gen_model,
+            ret_hit=config.ret_hit,
+            retrieval_chunk_size=config.retrieval_chunk_size,
+            cache_dir=config.cache_dir,
+            access_token=config.access_token,
+            beacon_ratio=config.beacon_ratio,
+            load_in_4bit=config.load_in_4bit,
+            enable_flash_attn=config.enable_flash_attn,
+        )
+
     def __init__(
         self,
         mem_model_name_or_path: str,

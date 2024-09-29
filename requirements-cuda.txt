@@ -1,5 +1,5 @@
 deepspeed>=0.14.0 
 minference==0.1.5
 triton==2.3.1
-accelerate 
 faiss-gpu
+flash_attn
