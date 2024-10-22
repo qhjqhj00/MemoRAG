@@ -466,10 +466,15 @@ class MemoRAG:
             prompt = self.prompts[task_key].format(input=query, context=knowledge) if query else self.prompts[task_key].format(context=knowledge)
 
         if self.gen_model.__class__.__name__ == "Memory" and self.mem_model.memo_type == "beacon":
+            # `beacon` always has memory
             # self.gen_model._enable_beacon = False
             output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
             # self.gen_model._enable_beacon = True
-        else:
+        elif self.gen_model.__class__.__name__ == "Memory" and self.mem_model.memo_type == "longllm": 
+            # `longllm` stores/restores memory by past_key_values, user can control it by `with_cache`
             output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens, with_cache=False)[0]
+        elif self.gen_model.__class__.__name__ == "Model":
+            # `Model.generate` does NOT have  parameter `with_cache`
+            output = self.gen_model.generate(prompt, max_new_tokens=max_new_tokens)[0]
         torch.cuda.empty_cache() 
         return output
