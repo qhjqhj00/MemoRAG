@@ -5,7 +5,7 @@
 <p><strong>Empowering RAG with a memory-based data interface for all-purpose applications!</strong></p>
 <a href="https://arxiv.org/abs/2409.05591" target="_blank"><img src=https://img.shields.io/badge/arXiv-b5212f.svg?logo=arxiv></a>
 <a href="https://huggingface.co/TommyChien/memorag-qwen2-7b-inst" target="_blank"><img src=https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace%20Model-27b3b4.svg></a>
-<a href="https://github.com/"><img alt="License" src="https://img.shields.io/badge/Apache-green"></a>
+<a href="https://github.com/"><img alt="License" src="https://img.shields.io/badge/Apache-2.0-green"></a>
 <a><img alt="Static Badge" src="https://img.shields.io/badge/made_with-Python-blue"></a>
 </div>
 
@@ -692,7 +692,7 @@ Other Evaluation Data: [this repo](https://huggingface.co/datasets/TommyChien/Me
 
 ## :bookmark: License
 
-MemoRAG is licensed under the [<u>Apache License</u>](./LICENSE).
+MemoRAG is licensed under the [<u>Apache 2.0 License</u>](./LICENSE).
 
 ## Citation
 
