@@ -22,28 +22,15 @@
 
 ## Overview
 
-**MemoRAG** is an innovative RAG framework built on top of a highly efficient, super-long memory model. Unlike standard RAG, which primarily handles queries with explicit information needs, MemoRAG leverages its memory model to achieve a global understanding of the entire database. By recalling query-specific clues from memory, MemoRAG enhances evidence retrieval, resulting in more accurate and contextually rich response generation.​
-
+**MemoRAG** is an innovative RAG framework built on top of a highly efficient, super-long memory model. Unlike standard RAG, which primarily handles queries with explicit information needs, MemoRAG leverages its memory model to achieve a global understanding of the entire database. By recalling query-specific clues from memory, MemoRAG enhances evidence retrieval, resulting in more accurate and contextually rich response generation.​ The paper for MemoRAG is accepted by [theWebConf 2025](https://arxiv.org/abs/2409.05591). 
 
 <p align="center">
 <img src="asset/tech_case.jpg">
 </p>
 
-## MemoRAG Demo
-We will provide a toy demo to demonstrate MemoRAG, you can try with the following scripts:
-
-```python
-streamlit run demo/demo.py
-```
-Afterwards, you can view the demo as below:
-
-<div style="display: flex; justify-content: space-around;">
-  <div style="text-align: center;">
-    <img src="./asset/demo.gif" style="width: 100%;">
-  </div>
-</div>
-
 ## :page_with_curl: Changelog
+[23/04/25] We release the training scripts and [training dataset](https://huggingface.co/datasets/TommyChien/MemoRAG-Training) for MemoRAG. And we will continue to improve this repository in the near future.
+
 [21/09/24] MemoRAG introduces Lite mode, enabling memory-augmented RAG processing for millions of tokens with just a few lines of code. For more details, refer to the [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/tommy-dev-lite/examples/memorag_lite.ipynb) notebook.
 
 [13/09/24] MemoRAG adds `Meta-Llama-3.1-8B-Instruct` and `Llama3.1-8B-Chinese-Chat` as the Memory Model, see [`examples`](https://github.com/qhjqhj00/MemoRAG/blob/main/examples/longllm_as_memory.ipynb). 
@@ -687,6 +674,14 @@ UltraDomain Benchmark: [this repo](https://huggingface.co/datasets/TommyChien/Ul
 
 Other Evaluation Data: [this repo](https://huggingface.co/datasets/TommyChien/MemoRAG-data/).
 
+## MemoRAG Demo
+
+
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <img src="./asset/demo.gif" style="width: 100%;">
+  </div>
+</div>
 
 ## :raised_hands: FAQs
 
@@ -699,12 +694,15 @@ MemoRAG is licensed under the [<u>Apache 2.0 License</u>](./LICENSE).
 If you use MemoRAG in your research, please cite our paper:
 
 ```bibtex
-@misc{qian2024memorag,
-      title={MemoRAG: Moving towards Next-Gen RAG Via Memory-Inspired Knowledge Discovery}, 
-      author={Hongjin Qian and Peitian Zhang and Zheng Liu and Kelong Mao and Zhicheng Dou},
-      year={2024},
-      eprint={2409.05591},
-      url={https://arxiv.org/abs/2409.05591}, 
+@inproceedings{qian2025memorag,
+  title     = {MemoRAG: Boosting Long Context Processing with Global Memory-Enhanced Retrieval Augmentation},
+  author    = {Hongjin Qian and Zheng Liu and Peitian Zhang and Kelong Mao and Defu Lian and Zhicheng Dou and Tiejun Huang},
+  booktitle = {Proceedings of the ACM Web Conference 2025 (TheWebConf 2025)},
+  year      = {2025},
+  address   = {Sydney, Australia},
+  publisher = {ACM},
+  url       = {https://arxiv.org/abs/2409.05591},
+  note      = {arXiv:2409.05591}
 }
 ```
 
